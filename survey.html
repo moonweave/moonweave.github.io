@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="survey-endpoint" content="https://phd-ai-log-survey.moonweave.workers.dev/submit">
-    <title>연구툴 아이디어 제보함 | phd.ai.log</title>
+    <title>AI 아이디어 드롭박스 | phd.ai.log</title>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -243,55 +243,55 @@
         <a class="top-link" href="./index.html">&lt; back to phd.ai.log</a>
 
         <section class="intro">
-            <p class="eyebrow">TOOL IDEA BOX</p>
-            <h1>대학원 생활하다 “이거 누가 좀 만들어줬으면” 싶었던 순간 있나요?</h1>
-            <p>논문 읽기, 자료 정리, 분석, 발표 준비 중 귀찮았던 순간을 가볍게 남겨주세요.</p>
+            <p class="eyebrow">AI IDEA DROPBOX</p>
+            <h1>AI 쓰다가 떠오른 생각 있나요?</h1>
+            <p>불편했던 순간, 있으면 좋겠는 기능, 그냥 재밌는 아이디어까지 가볍게 남겨주세요.</p>
         </section>
 
         <p class="status" data-survey-status aria-live="polite"></p>
 
         <form data-survey-form>
             <fieldset class="field">
-                <legend>지금 어디쯤 있나요?</legend>
+                <legend>어떤 쪽에 가까운가요?</legend>
                 <div class="radio-grid">
-                    <label class="radio-card"><input type="radio" name="role" value="grad_student" checked> 대학원생</label>
-                    <label class="radio-card"><input type="radio" name="role" value="researcher"> 연구자</label>
-                    <label class="radio-card"><input type="radio" name="role" value="research_engineer"> 연구툴 만드는 쪽</label>
+                    <label class="radio-card"><input type="radio" name="role" value="grad_student" checked> 대학원생/연구자</label>
+                    <label class="radio-card"><input type="radio" name="role" value="researcher"> 공부하는 사람</label>
+                    <label class="radio-card"><input type="radio" name="role" value="research_engineer"> 일하는 사람</label>
                     <label class="radio-card"><input type="radio" name="role" value="other"> 그 외</label>
                 </div>
                 <p class="error" data-error-for="role"></p>
             </fieldset>
 
             <fieldset class="field">
-                <legend>어디서 제일 손이 많이 가나요?</legend>
+                <legend>어떤 순간에 떠올랐나요?</legend>
                 <div class="radio-grid">
-                    <label class="radio-card"><input type="radio" name="area" value="paper_reading" checked> 논문 읽기</label>
-                    <label class="radio-card"><input type="radio" name="area" value="pdf_reference"> 자료/PDF 정리</label>
-                    <label class="radio-card"><input type="radio" name="area" value="coding_analysis"> 코드/분석</label>
-                    <label class="radio-card"><input type="radio" name="area" value="figures_slides"> 그림/발표자료</label>
+                    <label class="radio-card"><input type="radio" name="area" value="paper_reading" checked> 자료 읽기/정리</label>
+                    <label class="radio-card"><input type="radio" name="area" value="pdf_reference"> 파일/PDF 정리</label>
+                    <label class="radio-card"><input type="radio" name="area" value="coding_analysis"> 코딩/분석</label>
+                    <label class="radio-card"><input type="radio" name="area" value="figures_slides"> 이미지/발표자료</label>
                     <label class="radio-card"><input type="radio" name="area" value="writing"> 글쓰기</label>
-                    <label class="radio-card"><input type="radio" name="area" value="automation"> 반복업무 자동화</label>
+                    <label class="radio-card"><input type="radio" name="area" value="automation"> AI랑 대화하다가</label>
                     <label class="radio-card"><input type="radio" name="area" value="other"> 기타</label>
                 </div>
                 <p class="error" data-error-for="area"></p>
             </fieldset>
 
             <div class="field">
-                <label for="pain">어떤 순간이 불편했나요?</label>
-                <textarea id="pain" name="pain" maxlength="800" required placeholder="예: 논문 여러 편을 비교할 때 표와 그림 근거를 다시 찾는 게 오래 걸려요."></textarea>
-                <p class="hint">길게 안 써도 됩니다. 한두 문장이면 충분해요.</p>
+                <label for="pain">무슨 생각이 떠올랐나요?</label>
+                <textarea id="pain" name="pain" maxlength="800" required placeholder="예: 챗GPT랑 얘기하다가 이 답변을 바로 표나 체크리스트로 정리해주면 좋겠다고 생각했어요."></textarea>
+                <p class="hint">잘 정리하지 않아도 됩니다. 한두 문장이면 충분해요.</p>
                 <p class="error" data-error-for="pain"></p>
             </div>
 
             <div class="field">
-                <label for="wish">이런 도구 있으면 좋겠다 싶은 게 있나요?</label>
-                <textarea id="wish" name="wish" maxlength="800" placeholder="예: PDF 여러 개를 넣으면 실험 조건 차이를 표로 정리해주는 도구"></textarea>
-                <p class="hint">없으면 비워둬도 됩니다.</p>
+                <label for="wish">조금 더 설명해도 좋아요</label>
+                <textarea id="wish" name="wish" maxlength="800" placeholder="언제 쓰고 싶은지, 누가 쓰면 좋을지, 대충 이런 느낌이면 좋겠다 싶은 것 아무거나"></textarea>
+                <p class="hint">없으면 비워둬도 됩니다. 떠오른 만큼만 남겨주세요.</p>
                 <p class="error" data-error-for="wish"></p>
             </div>
 
             <div class="submit-row">
-                <button type="submit" data-survey-submit>가볍게 남기기</button>
+                <button type="submit" data-survey-submit>아이디어 던지기</button>
             </div>
         </form>
     </main>

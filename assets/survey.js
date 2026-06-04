@@ -49,7 +49,7 @@ function formFields() {
 
 function setSubmitting(isSubmitting) {
   submitButton.disabled = isSubmitting;
-  submitButton.textContent = isSubmitting ? '보내는 중...' : '가볍게 남기기';
+  submitButton.textContent = isSubmitting ? '보내는 중...' : '아이디어 던지기';
 }
 
 function showThanks() {
@@ -92,4 +92,3 @@ form.addEventListener('submit', async (event) => {
     setSubmitting(false);
   }
 });
-
