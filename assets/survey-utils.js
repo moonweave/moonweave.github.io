@@ -12,6 +12,7 @@ export const AREA_OPTIONS = new Set([
   'figures_slides',
   'writing',
   'automation',
+  'ai_chat',
   'other',
 ]);
 
@@ -58,4 +59,3 @@ export function validateSurveyPayload(payload) {
 
   return Object.keys(errors).length === 0 ? { ok: true, errors: {} } : { ok: false, errors };
 }
-

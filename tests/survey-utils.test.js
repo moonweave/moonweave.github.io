@@ -25,7 +25,7 @@ test('buildSurveyPayload trims text fields and keeps selected values', () => {
 test('validateSurveyPayload accepts a complete payload', () => {
   const result = validateSurveyPayload({
     role: 'researcher',
-    area: 'paper_reading',
+    area: 'ai_chat',
     pain: '논문 여러 편을 비교하면서 핵심 차이를 정리하는 일이 오래 걸려요.',
     wish: '',
   });
@@ -56,4 +56,3 @@ test('validateSurveyPayload rejects overlong wish text', () => {
   assert.equal(result.ok, false);
   assert.equal(result.errors.wish, 'wish_too_long');
 });
-
