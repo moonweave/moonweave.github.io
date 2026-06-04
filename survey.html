@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="survey-endpoint" content="https://phd-ai-log-survey.moonweave.workers.dev/submit">
+    <title>Research Tool Survey | phd.ai.log</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #09090b;
+            --panel-bg: rgba(255, 255, 255, 0.035);
+            --panel-border: rgba(255, 255, 255, 0.09);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #58a6ff;
+            --accent-2: #8b5cf6;
+            --error: #fb7185;
+            --success: #7dd3fc;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 34px 20px 52px;
+            box-sizing: border-box;
+            background-color: var(--bg-color);
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: var(--text-primary);
+            font-family: 'Pretendard', -apple-system, sans-serif;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: -20% auto auto 50%;
+            transform: translateX(-50%);
+            width: 78vw;
+            height: 46vh;
+            background: radial-gradient(circle, rgba(88, 166, 255, 0.08) 0%, transparent 68%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .survey-shell {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .top-link {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 28px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            text-decoration: none;
+        }
+
+        .top-link:hover {
+            color: var(--accent);
+        }
+
+        .intro {
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            letter-spacing: 0.04em;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 1.9rem;
+            line-height: 1.18;
+            letter-spacing: 0;
+        }
+
+        .intro p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.65;
+            word-break: keep-all;
+        }
+
+        form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .field {
+            padding: 18px;
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        label,
+        legend {
+            display: block;
+            margin: 0 0 12px;
+            color: var(--text-primary);
+            font-size: 0.96rem;
+            font-weight: 700;
+        }
+
+        .radio-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .radio-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .radio-card:has(input:checked) {
+            border-color: rgba(88, 166, 255, 0.55);
+            color: var(--text-primary);
+            background: rgba(88, 166, 255, 0.08);
+        }
+
+        input[type="radio"] {
+            accent-color: var(--accent);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 108px;
+            resize: vertical;
+            box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 13px 14px;
+            background: rgba(0,0,0,0.24);
+            color: var(--text-primary);
+            font: inherit;
+            line-height: 1.55;
+        }
+
+        textarea:focus {
+            outline: 2px solid rgba(88, 166, 255, 0.35);
+            border-color: rgba(88, 166, 255, 0.5);
+        }
+
+        .hint,
+        .error {
+            margin: 8px 0 0;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        .hint {
+            color: rgba(148, 163, 184, 0.82);
+        }
+
+        .error {
+            color: var(--error);
+        }
+
+        .submit-row {
+            display: grid;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        button {
+            min-height: 52px;
+            border: 0;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #09090b;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(88, 166, 255, 0.2);
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
+        .status {
+            min-height: 22px;
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.55;
+            word-break: keep-all;
+        }
+
+        .status[data-state="error"] {
+            color: var(--error);
+        }
+
+        .status[data-state="success"] {
+            padding: 20px;
+            border: 1px solid rgba(125, 211, 252, 0.28);
+            border-radius: 8px;
+            background: rgba(125, 211, 252, 0.06);
+            color: var(--success);
+        }
+
+        @media (max-width: 430px) {
+            body {
+                padding-inline: 20px;
+            }
+
+            h1 {
+                font-size: 1.62rem;
+            }
+
+            .radio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="survey-shell">
+        <a class="top-link" href="./index.html">&lt; back to phd.ai.log</a>
+
+        <section class="intro">
+            <p class="eyebrow">RESEARCH TOOL SURVEY</p>
+            <h1>연구하다 “이거 누가 좀 만들어줬으면” 싶었던 순간이 있나요?</h1>
+            <p>가볍게 남겨주세요. 나중에 실제 도구로 만들어볼 아이디어를 모으고 있어요.</p>
+        </section>
+
+        <p class="status" data-survey-status aria-live="polite"></p>
+
+        <form data-survey-form>
+            <fieldset class="field">
+                <legend>어떤 쪽에 가까운가요?</legend>
+                <div class="radio-grid">
+                    <label class="radio-card"><input type="radio" name="role" value="grad_student" checked> 대학원생</label>
+                    <label class="radio-card"><input type="radio" name="role" value="researcher"> 연구자</label>
+                    <label class="radio-card"><input type="radio" name="role" value="research_engineer"> 연구/개발 쪽</label>
+                    <label class="radio-card"><input type="radio" name="role" value="other"> 그 외</label>
+                </div>
+                <p class="error" data-error-for="role"></p>
+            </fieldset>
+
+            <fieldset class="field">
+                <legend>어떤 작업에서 떠오른 불편함인가요?</legend>
+                <div class="radio-grid">
+                    <label class="radio-card"><input type="radio" name="area" value="paper_reading" checked> 논문 읽기</label>
+                    <label class="radio-card"><input type="radio" name="area" value="pdf_reference"> PDF/레퍼런스</label>
+                    <label class="radio-card"><input type="radio" name="area" value="coding_analysis"> 코드/분석</label>
+                    <label class="radio-card"><input type="radio" name="area" value="figures_slides"> 그림/발표자료</label>
+                    <label class="radio-card"><input type="radio" name="area" value="writing"> 글쓰기</label>
+                    <label class="radio-card"><input type="radio" name="area" value="automation"> 반복업무 자동화</label>
+                    <label class="radio-card"><input type="radio" name="area" value="other"> 기타</label>
+                </div>
+                <p class="error" data-error-for="area"></p>
+            </fieldset>
+
+            <div class="field">
+                <label for="pain">어떤 순간이 불편했나요?</label>
+                <textarea id="pain" name="pain" maxlength="800" required placeholder="예: 논문 여러 편을 비교할 때 표와 그림 근거를 다시 찾는 게 오래 걸려요."></textarea>
+                <p class="hint">길게 안 써도 됩니다. 한두 문장이면 충분해요.</p>
+                <p class="error" data-error-for="pain"></p>
+            </div>
+
+            <div class="field">
+                <label for="wish">있으면 좋겠다 싶은 도구가 있나요?</label>
+                <textarea id="wish" name="wish" maxlength="800" placeholder="예: PDF 여러 개를 넣으면 실험 조건 차이를 표로 정리해주는 도구"></textarea>
+                <p class="hint">없으면 비워둬도 됩니다.</p>
+                <p class="error" data-error-for="wish"></p>
+            </div>
+
+            <div class="submit-row">
+                <button type="submit" data-survey-submit>가볍게 남기기</button>
+            </div>
+        </form>
+    </main>
+
+    <script type="module" src="./assets/survey.js"></script>
+</body>
+</html>

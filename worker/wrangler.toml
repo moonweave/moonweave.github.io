@@ -1,0 +1,8 @@
+name = "phd-ai-log-survey"
+main = "src/index.js"
+compatibility_date = "2026-06-04"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "phd_ai_log_survey"
+database_id = "e904ef44-8a69-460e-9696-f4975b3721d7"
