@@ -1,6 +1,8 @@
 name = "phd-ai-log-survey"
 main = "src/index.js"
 compatibility_date = "2026-06-04"
+workers_dev = true
+preview_urls = false
 
 [[d1_databases]]
 binding = "DB"
