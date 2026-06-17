@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workspace | phd.ai.log</title>
+  <meta name="description" content="phd.ai.log의 프롬프트, 기록, 저장소, support 링크.">
+  <style>
+    :root {
+      --bg: #07090c;
+      --ink: #eef3f8;
+      --muted: #a3adb9;
+      --quiet: #707b88;
+      --line: rgba(238, 243, 248, 0.14);
+      --line-soft: rgba(238, 243, 248, 0.08);
+      --panel: rgba(238, 243, 248, 0.052);
+      --blue: #78b7ff;
+      --green: #8de6c0;
+      --amber: #d9b76f;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--bg); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.021) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(7, 9, 12, 0.2), rgba(7, 9, 12, 0.98)),
+        var(--bg);
+      background-size: 34px 34px, 34px 34px, auto, auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Apple SD Gothic Neo", "Noto Sans KR", monospace;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(820px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 38px 0 42px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      color: var(--quiet);
+      font-size: 12px;
+    }
+
+    .home {
+      color: var(--muted);
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .home:hover {
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    header {
+      margin: 76px 0 44px;
+    }
+
+    .kicker {
+      margin: 0 0 15px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 8vw, 74px);
+      line-height: 1;
+      letter-spacing: 0;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    .intro {
+      max-width: 590px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+      word-break: keep-all;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    section {
+      margin-top: 38px;
+      scroll-margin-top: 30px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: var(--quiet);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .section-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 26px;
+    }
+
+    .section-links a {
+      padding: 9px 11px;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.025);
+      font-size: 12px;
+    }
+
+    .section-links a:hover {
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      min-height: 92px;
+      padding: 18px;
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      background: var(--panel);
+      transition: transform 170ms ease, border-color 170ms ease, background 170ms ease;
+    }
+
+    .item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(120,183,255,0.36);
+      background: rgba(238, 243, 248, 0.072);
+    }
+
+    .num {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+      word-break: keep-all;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    .copy {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      word-break: keep-all;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    .arrow {
+      color: var(--blue);
+      font-size: 18px;
+    }
+
+    .note {
+      color: var(--amber);
+    }
+
+    .blue {
+      color: var(--blue);
+    }
+
+    footer {
+      margin-top: 52px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line-soft);
+      color: var(--quiet);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100vw - 24px, 820px);
+        padding-top: 26px;
+      }
+
+      .top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      header {
+        margin: 58px 0 34px;
+      }
+
+      .item {
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .arrow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="top" aria-label="상단 이동">
+      <span>Moon / phd.ai.log</span>
+      <a class="home" href="./">← home</a>
+    </nav>
+
+    <header>
+      <p class="kicker">workspace</p>
+      <h1>필요한 곳으로 바로 들어가기.</h1>
+      <p class="intro">
+        지금은 Research Wiki 묶음부터 열어둔다.
+        앞으로 써볼 프롬프트는 주제별로 조금씩 쌓아간다.
+      </p>
+      <nav class="section-links" aria-label="섹션 이동">
+        <a href="#prompts">prompts</a>
+        <a href="#notes">notes</a>
+        <a href="#github">github</a>
+        <a href="#support">support</a>
+      </nav>
+    </header>
+
+    <section id="prompts" aria-labelledby="prompts-title">
+      <h2 id="prompts-title">prompts</h2>
+      <div class="stack">
+        <a class="item" href="./prompts/research-wiki-design-prompt.md" target="_blank" rel="noopener">
+          <span class="num">01</span>
+          <div>
+            <p class="title">research wiki</p>
+            <p class="copy">논문 노트를 나중에 다시 찾기 위한 Obsidian 위키 설계 프롬프트.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="item" href="./prompts/research-wiki-skill-prompt.md" target="_blank" rel="noopener">
+          <span class="num">02</span>
+          <div>
+            <p class="title">wiki skill</p>
+            <p class="copy">내 위키를 Claude Code / Codex가 먼저 찾아보게 만드는 연결 프롬프트.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="notes" aria-labelledby="notes-title">
+      <h2 id="notes-title">notes</h2>
+      <div class="stack">
+        <a class="item" href="https://www.instagram.com/phd.ai.log/p/DZRS25rj9gd/" target="_blank" rel="noopener">
+          <span class="num note">log</span>
+          <div>
+            <p class="title">dynamic workflows</p>
+            <p class="copy">Claude Code의 Dynamic workflows를 직접 써보고 남긴 기록.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="github" aria-labelledby="github-title">
+      <h2 id="github-title">github</h2>
+      <div class="stack">
+        <a class="item" href="https://github.com/moonweave" target="_blank" rel="noopener">
+          <span class="num blue">git</span>
+          <div>
+            <p class="title">moonweave</p>
+            <p class="copy">도구, 실험 코드, 공개 저장소.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="support" aria-labelledby="support-title">
+      <h2 id="support-title">support</h2>
+      <div class="stack">
+        <a class="item" href="https://ko-fi.com/phdailog" target="_blank" rel="noopener">
+          <span class="num note">kofi</span>
+          <div>
+            <p class="title">Ko-fi</p>
+            <p class="copy">가볍게 열어둔 support 링크.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div>prompts / notes / github / support</div>
+      <div>Moon · @phd.ai.log</div>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,293 +1,558 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>phd.ai.log | AI로 연구를 조금 덜 빡세게</title>
-    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-color: #09090b;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-glow: rgba(88, 166, 255, 0.3);
-            --gradient-start: #58a6ff;
-            --gradient-end: #8b5cf6;
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moon | phd.ai.log</title>
+  <meta name="description" content="연구의 흐름을 잃지 않기 위한 AI 활용 기록. 논문정리, 코딩, 실험 자동화에 쓰는 프롬프트와 노트.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Moon | phd.ai.log">
+  <meta property="og:description" content="연구의 흐름을 잃지 않기 위한 프롬프트와 실험 기록.">
+  <meta property="og:image" content="./assets/obsidian-graph-view.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --bg: #07090c;
+      --ink: #eef3f8;
+      --muted: #a3adb9;
+      --quiet: #707b88;
+      --line: rgba(238, 243, 248, 0.14);
+      --line-soft: rgba(238, 243, 248, 0.08);
+      --panel: rgba(238, 243, 248, 0.052);
+      --blue: #78b7ff;
+      --green: #8de6c0;
+      --amber: #d9b76f;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 24px 24px;
-            color: var(--text-primary);
-            font-family: 'Pretendard', -apple-system, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            margin: 0;
-            padding: 60px 20px;
-            box-sizing: border-box;
-            background-attachment: fixed;
-        }
+    * { box-sizing: border-box; }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: -10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70vw;
-            height: 50vh;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 65%);
-            z-index: -1;
-            pointer-events: none;
-        }
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
 
-        .container {
-            width: 100%;
-            max-width: 420px;
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(7, 9, 12, 0.12), rgba(7, 9, 12, 0.96)),
+        var(--bg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Apple SD Gothic Neo", "Noto Sans KR", monospace;
+      letter-spacing: 0;
+    }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.027) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.78), transparent 86%);
+    }
 
-        .profile-section {
-            text-align: center;
-            margin-bottom: 44px;
-        }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.024) 0,
+        rgba(255,255,255,0.024) 1px,
+        transparent 1px,
+        transparent 5px
+      );
+      opacity: 0.28;
+      mix-blend-mode: screen;
+    }
 
-        .profile-img-wrapper {
-            display: inline-block;
-            padding: 3px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px var(--accent-glow);
-        }
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      width: 100%;
+      height: 100%;
+    }
 
-        .profile-avatar-cli {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 96px;
-            height: 96px;
-            border-radius: 50%;
-            border: 4px solid var(--bg-color);
-            background: #0f141c;
-            font-family: 'JetBrains Mono', monospace;
-            position: relative;
-        }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-        .profile-avatar-cli .prompt {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff, #c7d2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-            left: -1px; 
-        }
+    .shell {
+      width: min(1040px, calc(100vw - 32px));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 42px 0 30px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
 
-        .profile-avatar-cli .cursor {
-            font-size: 2.2rem;
-            font-weight: 400;
-            color: var(--gradient-start);
-            animation: blink 1.2s step-end infinite;
-        }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      color: var(--quiet);
+      font-size: 12px;
+    }
 
-        @keyframes blink {
-            from, to { opacity: 0; }
-            50% { opacity: 1; }
-        }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      font-weight: 700;
+    }
 
-        .profile-title {
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            letter-spacing: -0.01em;
-            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .terminal-mark {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(238, 243, 248, 0.16);
+      border-radius: 12px;
+      background:
+        linear-gradient(145deg, rgba(120, 183, 255, 0.13), rgba(141, 230, 192, 0.035)),
+        rgba(255,255,255,0.04);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 14px 36px rgba(0,0,0,0.32);
+    }
 
-        .profile-desc {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin: 0;
-            word-break: keep-all;
-        }
+    .terminal-mark svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
 
-        .link-card {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 18px 22px;
-            margin-bottom: 16px;
-            text-decoration: none;
-            color: var(--text-primary);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
 
-        .link-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
+    .status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(141, 230, 192, 0.72);
+    }
 
-        .link-card:hover:not(.disabled-card) {
-            transform: translateY(-4px);
-            border-color: rgba(88, 166, 255, 0.3);
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(88, 166, 255, 0.15);
-        }
+    .hero {
+      align-self: center;
+      width: 100%;
+      padding: 76px 0 66px;
+    }
 
-        .link-card:hover:not(.disabled-card)::before {
-            transform: translateX(100%);
-        }
+    .kicker {
+      margin: 0 0 22px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
 
-        .icon-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            margin-right: 18px;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
+    h1 {
+      margin: 0;
+      max-width: 740px;
+      font-size: clamp(42px, 8vw, 82px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      word-break: keep-all;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
 
-        .link-card:hover:not(.disabled-card) .icon-box {
-            background: var(--gradient-start);
-            color: #09090b;
-            border-color: transparent;
-            box-shadow: 0 0 12px rgba(88, 166, 255, 0.4);
-        }
+    .intro {
+      margin: 26px 0 0;
+      max-width: 610px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+      word-break: keep-all;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
 
-        .icon-box svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 40px;
+    }
 
-        .text-box {
-            flex: 1;
-        }
+    .portal {
+      position: relative;
+      display: grid;
+      align-content: space-between;
+      min-height: 136px;
+      padding: 18px 17px 17px;
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 16px 18px, rgba(141,230,192,0.16), transparent 26px),
+        linear-gradient(145deg, rgba(255,255,255,0.052), rgba(255,255,255,0.024)),
+        var(--panel);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      overflow: hidden;
+    }
 
-        .card-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+    .portal::before {
+      content: "";
+      position: absolute;
+      left: 17px;
+      top: 17px;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(141,230,192,0.5);
+      opacity: 0.85;
+    }
 
-        .card-subtitle {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--gradient-start);
-            letter-spacing: 0.02em;
-        }
+    .portal::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 34px;
+      bottom: 18px;
+      width: 1px;
+      background: linear-gradient(rgba(141,230,192,0.22), transparent);
+      opacity: 0.72;
+    }
 
-        .arrow-icon {
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: all 0.3s ease;
-            color: var(--text-secondary);
-        }
+    .portal:hover {
+      transform: translateY(-3px);
+      border-color: rgba(120, 183, 255, 0.42);
+      background:
+        linear-gradient(145deg, rgba(120,183,255,0.12), rgba(141,230,192,0.035)),
+        rgba(255,255,255,0.058);
+    }
 
-        .link-card:hover:not(.disabled-card) .arrow-icon {
-            opacity: 1;
-            transform: translateX(0);
-            color: var(--gradient-start);
-        }
+    .portal small {
+      padding-left: 18px;
+      color: var(--quiet);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
 
-        .disabled-card {
-            opacity: 0.4;
-            cursor: not-allowed;
-            background: rgba(255, 255, 255, 0.01);
-        }
-        
-        .disabled-card .card-subtitle {
-            color: var(--text-secondary);
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 48px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.15);
-            letter-spacing: 0.05em;
-        }
+    .portal strong {
+      display: block;
+      margin-top: 23px;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.2;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
 
-    </style>
+    .portal p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.55;
+      word-break: keep-all;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    }
+
+    .portal .arrow {
+      justify-self: end;
+      margin-top: 14px;
+      color: var(--green);
+      font-size: 18px;
+    }
+
+    .portal.prompts {
+      border-color: rgba(120, 183, 255, 0.25);
+    }
+
+    .minor {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .minor a {
+      padding: 9px 11px;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.024);
+      font-size: 12px;
+    }
+
+    .minor .support-link {
+      color: rgba(217, 183, 111, 0.82);
+      border-color: rgba(217, 183, 111, 0.18);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line-soft);
+      color: var(--quiet);
+      font-size: 11px;
+    }
+
+    @media (max-width: 860px) {
+      .portal-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .shell {
+        width: min(100vw - 24px, 1040px);
+        padding: 24px 0 22px;
+      }
+
+      .top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero {
+        padding: 56px 0 50px;
+      }
+
+      .intro {
+        font-size: 15px;
+      }
+
+      .portal-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 32px;
+      }
+
+      .portal {
+        min-height: 112px;
+        padding: 15px;
+      }
+
+      .portal strong {
+        margin-top: 12px;
+        font-size: 19px;
+      }
+
+      .portal p {
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .portal .arrow {
+        margin-top: 10px;
+      }
+
+      .portal-grid .portal:nth-child(3) {
+        grid-column: 1 / -1;
+      }
+
+      footer {
+        display: block;
+        line-height: 1.9;
+      }
+    }
+
+    @media (max-width: 340px) {
+      .hero {
+        padding: 34px 0 34px;
+      }
+
+      .kicker {
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .intro {
+        margin-top: 18px;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+
+      .portal-grid {
+        margin-top: 24px;
+      }
+
+      .portal {
+        min-height: 88px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+      }
+
+      .portal p {
+        display: none;
+      }
+
+      .portal-grid .portal:nth-child(3) {
+        grid-column: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .portal {
+        transition: none;
+      }
+    }
+  </style>
 </head>
 <body>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <main class="shell">
+    <header class="top" aria-label="상단 정보">
+      <a class="brand" href="./" aria-label="phd.ai.log 홈">
+        <span class="terminal-mark" aria-hidden="true">
+          <svg viewBox="0 0 42 42" fill="none">
+            <rect x="9" y="10" width="24" height="22" rx="4" stroke="rgba(238,243,248,.42)" stroke-width="1.2"/>
+            <path d="M9.5 16.5h23" stroke="rgba(238,243,248,.18)" stroke-width="1.2"/>
+            <circle cx="13.5" cy="13.5" r="1.15" fill="#8de6c0"/>
+            <circle cx="17.6" cy="13.5" r="1.15" fill="rgba(120,183,255,.72)"/>
+            <path d="M15 23l3.2-2.9L15 17.2" stroke="#eef3f8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21.5 24.5h6" stroke="#8de6c0" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>Moon / phd.ai.log</span>
+      </a>
+      <span class="status">research workflow online</span>
+    </header>
 
-    <div class="container">
-        
-        <div class="profile-section">
-            <div class="profile-img-wrapper">
-                <div class="profile-avatar-cli">
-                    <span class="prompt">&gt;</span><span class="cursor">_</span>
-                </div>
-            </div>
-            <h1 class="profile-title">@phd.ai.log</h1>
-            <p class="profile-desc">AI로 연구를 조금 덜 빡세게<br>만든 건 깃허브에, 아이디어는 설문으로</p>
-        </div>
+    <section class="hero" aria-label="소개">
+      <p class="kicker">personal research lab</p>
+      <h1>연구의 흐름을 잃지 않게.</h1>
+      <p class="intro">
+        논문, 코드, 실험 기록 사이에서 다시 찾을 수 있는 구조를 만든다.
+        프롬프트와 노트는 주제별로 천천히 쌓아간다.
+      </p>
 
-        <div class="links-section">
+      <nav class="portal-grid" aria-label="프로필 링크">
+        <a class="portal prompts" href="./library.html#prompts">
+          <small>01</small>
+          <div>
+            <strong>prompts</strong>
+            <p>다시 쓰고 싶은 문장들.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="portal" href="./library.html#notes">
+          <small>02</small>
+          <div>
+            <strong>notes</strong>
+            <p>써보고 남긴 사용 흔적.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="portal" href="https://github.com/moonweave" target="_blank" rel="noopener">
+          <small>03</small>
+          <div>
+            <strong>github</strong>
+            <p>실험이 코드로 남는 곳.</p>
+          </div>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </nav>
 
-            <a href="https://github.com/moonweave" target="_blank" class="link-card">
-                <div class="icon-box">
-                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                </div>
-                <div class="text-box">
-                    <div class="card-title">GitHub Repository</div>
-                    <div class="card-subtitle">만들어본 것들</div>
-                </div>
-                <div class="arrow-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </div>
-            </a>
+      <div class="minor">
+        <a href="https://www.instagram.com/phd.ai.log/" target="_blank" rel="noopener">instagram</a>
+        <a class="support-link" href="https://ko-fi.com/phdailog" target="_blank" rel="noopener">support</a>
+      </div>
+    </section>
 
-            <a href="./survey.html" class="link-card">
-                <div class="icon-box">
-                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v6h6v10H6zm2-7h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
-                </div>
-                <div class="text-box">
-                    <div class="card-title">AI Idea Dropbox</div>
-                    <div class="card-subtitle">떠오른 생각 아무거나</div>
-                </div>
-            </a>
+    <footer>
+      <span>Moon · @phd.ai.log</span>
+      <span>prompts / notes / github</span>
+    </footer>
+  </main>
 
-        </div>
-        
-        <div class="footer">
-            build --with researchers
-        </div>
-    </div>
+  <script>
+    (() => {
+      const canvas = document.getElementById("field");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let width = 0;
+      let height = 0;
+      let particles = [];
+      let frame = 0;
 
+      function resize() {
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        const count = Math.max(42, Math.min(110, Math.floor((width * height) / 14500)));
+        particles = Array.from({ length: count }, (_, index) => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r: index % 9 === 0 ? 1.6 : 1,
+          hue: index % 6 === 0 ? "green" : "blue"
+        }));
+      }
+
+      function draw() {
+        frame += 1;
+        ctx.clearRect(0, 0, width, height);
+        ctx.strokeStyle = "rgba(120, 183, 255, 0.08)";
+        ctx.lineWidth = 1;
+
+        for (let i = 0; i < particles.length; i += 1) {
+          const p = particles[i];
+          if (!reduceMotion) {
+            p.x += p.vx + Math.sin((frame + i * 13) / 160) * 0.02;
+            p.y += p.vy + Math.cos((frame + i * 11) / 170) * 0.02;
+            if (p.x < -10) p.x = width + 10;
+            if (p.x > width + 10) p.x = -10;
+            if (p.y < -10) p.y = height + 10;
+            if (p.y > height + 10) p.y = -10;
+          }
+
+          ctx.beginPath();
+          ctx.fillStyle = p.hue === "green" ? "rgba(141, 230, 192, 0.24)" : "rgba(120, 183, 255, 0.18)";
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j += 1) {
+            const q = particles[j];
+            const dx = p.x - q.x;
+            const dy = p.y - q.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 112) {
+              ctx.globalAlpha = (1 - dist / 112) * 0.55;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+        }
+
+        if (!reduceMotion) requestAnimationFrame(draw);
+      }
+
+      resize();
+      draw();
+      window.addEventListener("resize", resize, { passive: true });
+    })();
+  </script>
 </body>
 </html>
